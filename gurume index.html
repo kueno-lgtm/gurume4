@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>グルメアフィリエイト用：タブ切り替えランキング</title>
+  <style>
+    /* 全体のリセットとベース設定 */
+    body { background-color: #f7f9fa; padding: 20px; }
+    
+    .gr-ranking-wrapper {
+      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+
+    /* タブボタンエリア */
+    .gr-tabs {
+      display: flex;
+      background: #fdf5e6;
+      border-bottom: 2px solid #ff7a00;
+    }
+    .gr-tab-btn {
+      flex: 1;
+      padding: 15px 10px;
+      border: none;
+      background: transparent;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #888;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      position: relative;
+    }
+    .gr-tab-btn:hover { background: #faecd5; color: #ff7a00; }
+    .gr-tab-btn.active { background: #ff7a00; color: #fff; }
+    /* アクティブタブの下向き三角 */
+    .gr-tab-btn.active::after {
+      content: ""; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+      border-width: 10px 10px 0; border-style: solid; border-color: #ff7a00 transparent transparent transparent;
+      z-index: 10;
+    }
+
+    /* パネルエリア */
+    .gr-panel-container { padding: 30px 20px; background: #fffdfa; }
+    .gr-panel { display: none; animation: fadeIn 0.4s ease-in-out; }
+    .gr-panel.active { display: block; }
+
+    /* ランキングカード */
+    .gr-card {
+      display: flex; align-items: center; gap: 20px;
+      background: #fff; border: 1px solid #eee; border-radius: 8px;
+      padding: 20px; margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      position: relative; transition: transform 0.2s ease;
+    }
+    .gr-card:hover { transform: translateY(-3px); border-color: #ffcd99; box-shadow: 0 6px 15px rgba(255,122,0,0.1); }
+    @media (max-width: 600px) { .gr-card { flex-direction: column; text-align: center; } }
+
+    /* 順位バッジ */
+    .gr-rank-badge {
+      position: absolute; top: -12px; left: -12px;
+      width: 45px; height: 45px; border-radius: 50%;
+      color: #fff; font-weight: bold; font-size: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+    .gr-rank-1 { background: linear-gradient(135deg, #ffd700, #daa520); } /* 金 */
+    .gr-rank-2 { background: linear-gradient(135deg, #e0e0e0, #a9a9a9); } /* 銀 */
+    .gr-rank-3 { background: linear-gradient(135deg, #ff9e66, #cd7f32); } /* 銅 */
+
+    /* 画像ダミー */
+    .gr-img-placeholder {
+      width: 120px; height: 90px; background: #ffebd6; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      color: #ff7a00; font-size: 0.8rem; font-weight: bold; flex-shrink: 0;
+    }
+
+    /* テキスト・ボタンエリア */
+    .gr-info { flex: 1; text-align: left; }
+    @media (max-width: 600px) { .gr-info { text-align: center; } }
+    .gr-title { font-size: 1.2rem; font-weight: bold; color: #333; margin: 0 0 10px 0; }
+    .gr-desc { font-size: 0.9rem; color: #666; margin: 0 0 15px 0; line-height: 1.5; }
+    
+    .gr-btn-group { display: flex; gap: 10px; }
+    @media (max-width: 600px) { .gr-btn-group { flex-direction: column; } }
+    .gr-btn {
+      flex: 1; text-align: center; padding: 10px; border-radius: 4px;
+      font-weight: bold; text-decoration: none; font-size: 0.9rem; transition: 0.2s;
+    }
+    .gr-btn-detail { background: #fff; color: #ff7a00; border: 1px solid #ff7a00; }
+    .gr-btn-detail:hover { background: #fff5eb; }
+    .gr-btn-cv { background: #ff7a00; color: #fff; box-shadow: 0 3px 0 #cc6200; }
+    .gr-btn-cv:hover { background: #e66e00; transform: translateY(2px); box-shadow: 0 1px 0 #cc6200; }
+
+    /* ふんわり表示アニメーション */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="gr-ranking-wrapper">
+    
+    <div class="gr-tabs">
+      <button class="gr-tab-btn active" data-target="panel-taku">🍱 宅食</button>
+      <button class="gr-tab-btn" data-target="panel-meal">🍳 ミールキット</button>
+      <button class="gr-tab-btn" data-target="panel-order">🎁 お取り寄せ</button>
+    </div>
+
+    <div class="gr-panel-container">
+      
+      <div id="panel-taku" class="gr-panel active">
+        <div class="gr-card">
+          <div class="gr-rank-badge gr-rank-1">1位</div>
+          <div class="gr-img-placeholder">画像(120x90)</div>
+          <div class="gr-info">
+            <h3 class="gr-title">【コスパ最強】サービスA</h3>
+            <p class="gr-desc">1食あたり約500円で続けやすい！レンジで5分の超時短弁当。メニューも豊富で飽きません。</p>
+            <div class="gr-btn-group">
+              <a href="#" class="gr-btn gr-btn-detail">実食レビューを読む</a>
+              <a href="#" class="gr-btn gr-btn-cv">初回お試しはこちら</a>
+            </div>
+          </div>
+        </div>
+        <div class="gr-card">
+          <div class="gr-rank-badge gr-rank-2">2位</div>
+          <div class="gr-img-placeholder">画像(120x90)</div>
+          <div class="gr-info">
+            <h3 class="gr-title">【糖質制限】サービスB</h3>
+            <p class="gr-desc">ダイエット中の方に最適。糖質30g以下、高タンパクでボディメイクをサポートします。</p>
+            <div class="gr-btn-group">
+              <a href="#" class="gr-btn gr-btn-detail">実食レビューを読む</a>
+              <a href="#" class="gr-btn gr-btn-cv">公式サイトを見る</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-meal" class="gr-panel">
+        <div class="gr-card">
+          <div class="gr-rank-badge gr-rank-1">1位</div>
+          <div class="gr-img-placeholder">画像(120x90)</div>
+          <div class="gr-info">
+            <h3 class="gr-title">【ファミリー向け】サービスC</h3>
+            <p class="gr-desc">カット済み食材が届くから、包丁いらずで20分で完成。お子様も喜ぶ味付けです。</p>
+            <div class="gr-btn-group">
+              <a href="#" class="gr-btn gr-btn-detail">実食レビューを読む</a>
+              <a href="#" class="gr-btn gr-btn-cv">初回お試しはこちら</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-order" class="gr-panel">
+        <div class="gr-card">
+          <div class="gr-rank-badge gr-rank-1">1位</div>
+          <div class="gr-img-placeholder">画像(120x90)</div>
+          <div class="gr-info">
+            <h3 class="gr-title">【絶品ギフト】高級黒毛和牛セット</h3>
+            <p class="gr-desc">お中元やお歳暮で絶対に失敗しない。とろけるような食感の特上霜降り肉です。</p>
+            <div class="gr-btn-group">
+              <a href="#" class="gr-btn gr-btn-detail">実食レビューを読む</a>
+              <a href="#" class="gr-btn gr-btn-cv">公式サイトを見る</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const tabBtns = document.querySelectorAll(".gr-tab-btn");
+      const panels = document.querySelectorAll(".gr-panel");
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener("click", function() {
+          tabBtns.forEach(b => b.classList.remove("active"));
+          panels.forEach(p => p.classList.remove("active"));
+
+          this.classList.add("active");
+          const targetId = this.getAttribute("data-target");
+          document.getElementById(targetId).classList.add("active");
+        });
+      });
+    });
+  </script>
+</body>
+</html>
